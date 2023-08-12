@@ -2,7 +2,6 @@ package com.raphaelferreira.nasaastronomyapi.main;
 
 import com.raphaelferreira.nasaastronomyapi.dto.request.ApiKey;
 import com.raphaelferreira.nasaastronomyapi.dto.request.AstronomyPictureRequest;
-
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -45,13 +44,10 @@ public class Main {
         }
 
         AstronomyPictureRequest myRequest1 = new AstronomyPictureRequest(date + myApiKey.getApiKey());
-        myRequest1.requestFromApi();
+        myRequest1.requestFromApi(myRequest1.getUrl());
 
-//        AstronomyPictureRequest myRequest2 = new AstronomyPictureRequest(dates[0],dates[1] + myApiKey.getApiKey());
-//        myRequest2.requestFromApi();
-
-
-
+        AstronomyPictureRequest myRequest2 = new AstronomyPictureRequest(dates[0],dates[1] + myApiKey.getApiKey());
+        myRequest2.requestFromApi();
 
     }
 }

@@ -1,11 +1,16 @@
 package com.raphaelferreira.nasaastronomyapi.dto.request;
 
+import com.raphaelferreira.nasaastronomyapi.dto.response.AstronomyPictureResponse;
+
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
+import java.util.ArrayList;
+
+import static com.raphaelferreira.nasaastronomyapi.dto.response.AstronomyPictureResponseHandler.astronomyPictureResponse;
 
 public class AstronomyPictureRequest {
     private String url;
@@ -41,11 +46,36 @@ public class AstronomyPictureRequest {
     }
 
     public void requestFromApi() throws IOException, InterruptedException {
-        System.out.println("URL Request: " + this.url);
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().GET().timeout(Duration.ofSeconds(15)).uri(URI.create(this.url)).build();
-        HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.statusCode());
-        System.out.println(response.body());
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(this.url)).build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 200) {
+            ArrayList<AstronomyPictureResponse> astronomyPictureResponseArrayList = astronomyPictureResponse(response.body());
+            for (AstronomyPictureResponse astronomyPictureResponse : astronomyPictureResponseArrayList) {
+                System.out.println("__________________________________________________________________________");
+                System.out.print("\nCopyright: " + astronomyPictureResponse.getCopyright());
+                System.out.println("\nDate: " + astronomyPictureResponse.getDate());
+                System.out.println("\nTitle: " + astronomyPictureResponse.getTitle());
+                System.out.println("\nExplanation: " + astronomyPictureResponse.getExplanation());
+                System.out.println("__________________________________________________________________________");
+            }
+        }
     }
+
+    public void requestFromApi(String url) throws IOException, InterruptedException {
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 200) {
+            AstronomyPictureResponse astronomyPictureResponse = astronomyPictureResponse(response.body(), url);
+            System.out.println("__________________________________________________________________________");
+            System.out.print("\nCopyright: " + astronomyPictureResponse.getCopyright());
+            System.out.println("\nDate: " + astronomyPictureResponse.getDate());
+            System.out.println("\nTitle: " + astronomyPictureResponse.getTitle());
+            System.out.println("\nExplanation: " + astronomyPictureResponse.getExplanation());
+            System.out.println("__________________________________________________________________________");
+
+        }
+    }
+
 }

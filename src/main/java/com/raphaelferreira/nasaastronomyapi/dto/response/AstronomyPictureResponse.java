@@ -1,5 +1,6 @@
 package com.raphaelferreira.nasaastronomyapi.dto.response;
 
+
 public class AstronomyPictureResponse {
     private String copyright;
     private String date;
